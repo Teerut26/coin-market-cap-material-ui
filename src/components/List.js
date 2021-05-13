@@ -27,6 +27,10 @@ export default function AlignItemsList(props) {
     }
   };
 
+  useEffect(() => {
+    props.setPage("Coin");
+  }, []);
+
   const getDataSymbol = (symbol) => {
     fetch("https://api-vue.000webhostapp.com/api/coin.php?symbol=" + symbol)
       .then((res) => res.json())
@@ -122,7 +126,7 @@ export default function AlignItemsList(props) {
       hasMore={hasMore}
       loader={
         <center>
-          <h4>Loading...</h4>
+          <i class="fas fa-circle-notch fa-spin"></i>
         </center>
       }
     >

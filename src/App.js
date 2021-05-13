@@ -23,6 +23,8 @@ import Favorites from "./components/Favorites";
 import { useEffect, useState } from "react";
 import { Switch, Route, useRouteMatch, Redirect } from "react-router-dom";
 
+import './App.css'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "fixed",
@@ -83,13 +85,14 @@ export default function BackToTop(props) {
   const [dataFromList, setDataFromList] = useState([]);
   const [searchResulte, setSearchResulte] = useState("");
   const [showList, setShowList] = useState(true);
+  const [page, setPage] = useState("Coin");
 
-  const [searchResulteTO, setSearchResulteTO] = useState("")
+  const [searchResulteTO, setSearchResulteTO] = useState("");
 
   useEffect(() => {
     if (searchResulte != null) {
       // console.log(searchResulte.name);
-      setSearchResulteTO(searchResulte.name)
+      setSearchResulteTO(searchResulte.name);
       setShowList(false);
     } else {
       setShowList(true);
@@ -109,7 +112,7 @@ export default function BackToTop(props) {
             aria-label="menu"
           ></IconButton>
           <Typography variant="h6" className={classes.title}>
-            Coin
+            {page}
           </Typography>
           <Button color="inherit">
             <Menu />
@@ -120,9 +123,9 @@ export default function BackToTop(props) {
       <Toolbar id="back-to-top-anchor" />
       <Container>
         <Switch>
-        <Route exact path="/">
-          <Redirect to="/Coin" />
-        </Route>
+          <Route exact path="/">
+            <Redirect to="/Coin" />
+          </Route>
           <Route exact path="/Coin">
             <Search
               resulte={(value) => setSearchResulte(value)}
@@ -130,9 +133,17 @@ export default function BackToTop(props) {
             />
             <Box>
               {showList ? (
-                <List list_data={(value) => setDataFromList(value)} />
+                <List
+                  setPage={(value) => {
+                    setPage(value);
+                  }}
+                  list_data={(value) => setDataFromList(value)}
+                />
               ) : (
                 <List
+                  setPage={(value) => {
+                    setPage(value);
+                  }}
                   searchName={searchResulteTO}
                   list_data={(value) => setDataFromList(value)}
                 />
@@ -141,7 +152,11 @@ export default function BackToTop(props) {
           </Route>
           <Route exact path="/Favorites">
             <Box>
-              <Favorites />
+              <Favorites
+                setPage={(value) => {
+                  setPage(value);
+                }}
+              />
             </Box>
           </Route>
         </Switch>

@@ -18,7 +18,7 @@ export default function SimpleMenu() {
   return (
     <div>
       <Button style={{color:"white"}} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-        Open Menu
+        Menu
       </Button>
       <Menu
         id="simple-menu"

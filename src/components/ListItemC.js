@@ -9,6 +9,8 @@ import Typography from "@material-ui/core/Typography";
 import { ListItemIcon } from "@material-ui/core";
 import StarIcon from "@material-ui/icons/Star";
 
+import Progress from './Progress'
+
 export default function ListItemC(props) {
   const [fev, setFev] = useState(false);
 
@@ -20,6 +22,40 @@ export default function ListItemC(props) {
   const setRemove = () => {
     setFev(false);
     props.removeFev(props.obj.id);
+  };
+
+  const persen = (currentData, maxData) => {
+    return ((currentData * 100) / maxData);
+  }
+
+  const nFormatter = (num, digits) => {
+    var si = [
+      {
+        value: 1,
+        symbol: "",
+      },
+      {
+        value: 1e3,
+        symbol: "k",
+      },
+      {
+        value: 1e6,
+        symbol: "M",
+      },
+      {
+        value: 1e9,
+        symbol: "B",
+      },
+    ];
+    var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    var i;
+    for (i = si.length - 1; i > 0; i--) {
+      if (num >= si[i].value) {
+        break;
+      }
+    }
+    // .replace(rx, "$1") + si[i].symbol
+    return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
   };
 
   useEffect(() => {
@@ -46,11 +82,21 @@ export default function ListItemC(props) {
         />
       </ListItemAvatar>
       <ListItemText
-        primary={props.obj.symbol}
+        primary={props.obj.symbol + " @" + props.obj.name + ""}
         secondary={
           <React.Fragment>
             <Typography component="span" variant="body2" color="textPrimary">
-              {props.obj.name}
+              {props.obj.circulatingSupply &&
+                nFormatter(props.obj.circulatingSupply, 2)}
+              {props.obj.circulating_supply &&
+                nFormatter(props.obj.circulating_supply, 2)}{" "}
+               / {props.obj.maxSupply && nFormatter(props.obj.maxSupply, 2)}
+              {props.obj.max_supply && nFormatter(props.obj.max_supply, 2)}
+              {props.obj.maxSupply || props.obj.max_supply ? "" : <i class="fas fa-infinity"></i>}
+              <br/>
+              {props.obj.circulatingSupply != 0 && props.obj.maxSupply   && <Progress value={persen(props.obj.circulatingSupply,props.obj.maxSupply)} />}
+              {props.obj.circulating_supply != 0 &&  props.obj.max_supply && <Progress value={persen(props.obj.circulating_supply,props.obj.max_supply)} />}
+              {props.obj.circulatingSupply != 0 && props.obj.maxSupply || props.obj.circulating_supply &&  props.obj.max_supply  ? "" : <Progress value={0} />}
             </Typography>
           </React.Fragment>
         }

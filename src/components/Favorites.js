@@ -6,11 +6,12 @@ import axios from "axios";
 
 const baseUrl = "https://web-api.coinmarketcap.com/v1/cryptocurrency/quotes";
 
-export default function AlignItemsList() {
+export default function AlignItemsList(props) {
   const [data, setData] = useState([]);
   const [nStart, setNStart] = useState(1);
   const [listFev, setListFev] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [Show, setShow] = useState(false)
 
   const addFev = (id) => {
     var from_local = JSON.parse(localStorage.getItem("dataFev"));
@@ -50,11 +51,16 @@ export default function AlignItemsList() {
             obj.push(response.data.data[key])
         }
         setData(obj)
+        setShow(true)
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  useEffect(() => {
+    props.setPage('Favorites')
+  }, [])
 
   useEffect(() => {
     var from_local = JSON.parse(localStorage.getItem("dataFev"));
@@ -75,14 +81,14 @@ export default function AlignItemsList() {
 
   return (
     <List>
-      {data.map((item) => (
+      {Show ? data.map((item) => (
         <ListItemC
           removeFev={(id) => removeFev(id)}
           addFev={(id) => addFev(id)}
           obj={item}
           fev={listFev}
         />
-      ))}
+      )) : <center><i class="fas fa-circle-notch fa-spin"></i></center>}
     </List>
   );
 }
